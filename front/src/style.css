@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Roboto", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.box-border {
+  border-width: 1px;
+  border-style: solid;
+  margin-bottom: 20px;
+  padding: 15px;
+  box-shadow: 0px 5px 10px #dddddd;
+  border-radius: 6px;
+}
+
+.box-number {
+  font-size: 30px;
+}
+
+.box-number-value {
+  color: #4888EB;
+}
+
+.box-number-pix {
+  color: #1DB4AC;
+}
+
+.box-number-cred {
+  color: #F1657D;
+}
+
+.box-number-debit {
+  color: #DB0812;
+}
+
+.box-number-cash {
+  color: #F9A826;
+}
+
+.box-text {
+  font-size: 16px;
+  color: #A5A5B5;
+}
