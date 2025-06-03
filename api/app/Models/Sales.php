@@ -14,4 +14,11 @@ class Sales extends Model
     {
         return $this->belongsTo(PaymentMethod::class);
     }
+
+    function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_sale')
+            ->withPivot(['quantity', 'total_price'])
+            ->withTimestamps();
+    }
 }

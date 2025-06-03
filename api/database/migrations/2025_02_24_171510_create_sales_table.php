@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->integer('quantity');
-            $table->string('product');
-            $table->decimal('price', 10, 2);
+            $table->integer('total_quantity');
+            $table->decimal('total_price', 10, 2);
+            $table->date('sale_date');
             $table->timestamps();
         });
     }

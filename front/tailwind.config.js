@@ -4,7 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        green: '#32C057',
+        blue: '#255267',
+        blueBackground: '#CBE1EE',
+        greenLightBorder: '#A6CCC0',
+        greenBackground: '#F2F7F5',
+        greenLightBackground: '#D0F1E7',
       },
     },
     container: {

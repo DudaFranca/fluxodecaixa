@@ -7,9 +7,9 @@ export const useSalesStore = defineStore('sales', () => {
   const sales = ref([]);
   const saleForm = ref({
     id: null,
-    product: '',
+    products: [],
     quantity: 0,
-    price: 0,
+    totalPrice: 0,
     paymentMethod: 0,
   });
 
@@ -26,6 +26,15 @@ export const useSalesStore = defineStore('sales', () => {
   const salesSaveAction = async (payload) => {
     try {
       const response = await api.post('/sales/create', payload);
+      await salesListAction();
+    } catch (error) {
+      console.error('Erro ao salvar', error);
+    }
+  };
+
+  const salesUpdateAction = async (payload) => {
+    try {
+      const response = await api.post(`/sales/edit/${payload.id}`, payload);
       sales.value = response.data;
       await salesListAction();
     } catch (error) {
@@ -33,13 +42,14 @@ export const useSalesStore = defineStore('sales', () => {
     }
   };
 
-  const salesUpdateAction = async (payload) => {
+  const saleAction = async (id) => {
     try {
-      const response = await api.put(`/sales/edit/${payload.id}`, payload);
-      sales.value = response.data;
-      await salesListAction();
+      const response = await api.get(`/sales/${id}`);
+      saleForm.value = { ...response.data.sale };
+      return saleForm.value;
     } catch (error) {
-      console.error('Error ao salvar', error);
+      console.error('Error ao buscar venda', error);
+      return null;
     }
   };
 
@@ -53,6 +63,7 @@ export const useSalesStore = defineStore('sales', () => {
     salesListAction,
     salesSaveAction,
     salesUpdateAction,
+    saleAction,
     setSaleForm,
   };
 });

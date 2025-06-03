@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Product\ProductController;
 use App\Http\Controllers\Api\Sales\SalesController;
 
 Route::post('login', [AuthController::class, 'authenticate'])->name('login');
@@ -23,5 +24,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // });
 
 Route::get('sales', [SalesController::class, 'index']);
+Route::get('sales/{id}', [SalesController::class, 'sale']);
 Route::post('sales/create', [SalesController::class, 'store']);
 Route::put('sales/edit/{id}', [SalesController::class, 'edit']);
+Route::get('products', [ProductController::class, 'index']);
