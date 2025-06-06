@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import 'flowbite';
 import './style.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css';
 import App from './App.vue';
