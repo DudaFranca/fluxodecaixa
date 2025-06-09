@@ -12,7 +12,7 @@
         z-10
     ">
       <div class="modal-header w-full p-6 flex justify-between border-b border-gray-200">
-        <h1 class="text-2xl">Nova Venda</h1>
+        <h1 class="text-2xl">{{ title }}</h1>
         <button 
           @click="close" 
           class="text-gray-600 hover:text-gray-900"
@@ -27,7 +27,7 @@
         <slot></slot>
       </div>
       
-      <div class="modal-footer w-full p-6 border-t border-gray-200 flex justify-end gap-4">
+      <div v-if="view" class="modal-footer w-full p-6 border-t border-gray-200 flex justify-end gap-4">
         <button class="bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-blue-700" @click="close">Cancelar</button>
         <button class="bg-blue text-white px-4 py-2 rounded-lg hover:bg-blue-700" @click="exec">Salvar</button>
       </div>
@@ -43,6 +43,14 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  view: {
+    type: Boolean,
+    default: true
+  },
+  title: {
+    type: String,
+    default: ''
+  }
 });
 
 const emit = defineEmits(['close', 'exec']);

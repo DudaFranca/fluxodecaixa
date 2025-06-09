@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { toast } from 'vue3-toastify';
 import api from '../services/axios';
+import 'vue3-toastify/dist/index.css';
 
 export const useSalesStore = defineStore('sales', () => {
   // States
@@ -20,15 +22,27 @@ export const useSalesStore = defineStore('sales', () => {
       sales.value = response.data;
     } catch (error) {
       console.error('Error ao buscar', error);
+      toast.error('Error ao buscar', {
+        position: 'top-center',
+        autoClose: 2000,
+      });
     }
   };
 
   const salesSaveAction = async (payload) => {
     try {
-      const response = await api.post('/sales/create', payload);
+      await api.post('/sales/create', payload);
       await salesListAction();
+      toast.success('Venda salva com sucesso!', {
+        position: 'top-center',
+        autoClose: 2000,
+      });
     } catch (error) {
-      console.error('Erro ao salvar', error);
+      toast.error('Erro ao salvar venda!', {
+        position: 'top-center',
+        autoClose: 2000,
+      });
+      console.error(error);
     }
   };
 
@@ -36,8 +50,16 @@ export const useSalesStore = defineStore('sales', () => {
     try {
       const response = await api.post(`/sales/edit/${payload.id}`, payload);
       sales.value = response.data;
+      toast.success('Venda editada com sucesso!', {
+        position: 'top-center',
+        autoClose: 2000,
+      });
       await salesListAction();
     } catch (error) {
+      toast.error('Erro ao editar venda!', {
+        position: 'top-center',
+        autoClose: 2000,
+      });
       console.error('Error ao salvar', error);
     }
   };

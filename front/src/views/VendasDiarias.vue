@@ -189,7 +189,7 @@
           </table>
       </div>
     </div>
-    <Modal :isOpen="isModalOpen" @exec="save" @close="toggleModal">
+    <Modal :isOpen="isModalOpen" :view="!viewSale" :title="titleModal" @exec="save" @close="toggleModal">
       <form>
         <div class="mb-4 flex gap-3">
           <div v-if="!viewSale" class="flex-1">
@@ -322,6 +322,7 @@
   const product = ref(null);
   const isModalOpen = ref(false);
   const viewSale = ref(false);
+  const titleModal = ref('');
   const selectedProducts = ref([]);
   const totalPrice = ref(0);
   const saleForm = ref({
@@ -375,6 +376,7 @@
     };
     
     viewSale.value = view ? true : false;
+    titleModal.value = view ? 'Venda Realizada' : 'Venda';
   }
 
   const setProduct = () => {
