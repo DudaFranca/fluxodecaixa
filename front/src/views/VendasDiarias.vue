@@ -43,13 +43,13 @@
           <div data-popper-arrow></div>
         </div>
 
-        <div class="box-number">
-          <h1 class="box-number-cred">{{ storeSales.sales?.payment_methods_count?.credit_card }}</h1>
+        <div class="box-number" data-popover-target="popover-default-cred">
+          <h1 class="box-number-cred">R$ {{ accountCred }}</h1>
           <p class="box-text">Venda no Crédito</p>
         </div>
         <div 
           data-popover
-          id="popover-default"
+          id="popover-default-cred"
           role="tooltip"
           class="
             absolute
@@ -68,13 +68,13 @@
           <div data-popper-arrow></div>
         </div>
 
-        <div class="box-number">
-          <h1 class="box-number-debit">{{ storeSales.sales?.payment_methods_count?.debit_card }}</h1>
+        <div class="box-number" data-popover-target="popover-default-debit">
+          <h1 class="box-number-debit">R$ {{ accountDebit }}</h1>
           <p class="box-text">Venda no Débito</p>
         </div>
         <div 
           data-popover
-          id="popover-default"
+          id="popover-default-debit"
           role="tooltip"
           class="
             absolute
@@ -93,13 +93,13 @@
           <div data-popper-arrow></div>
         </div>
 
-        <div class="box-number">
-          <h1 class="box-number-cash">{{ storeSales.sales?.payment_methods_count?.cash }}</h1>
+        <div class="box-number" data-popover-target="popover-default-cash">
+          <h1 class="box-number-cash">R$ {{ accountCash }}</h1>
           <p class="box-text">Venda no Dinheiro</p>
         </div>
         <div 
           data-popover
-          id="popover-default"
+          id="popover-default-cash"
           role="tooltip"
           class="
             absolute
@@ -119,6 +119,7 @@
         </div>
       </div>
 
+      <!-- Table -->
       <div 
         class="
           relative 
@@ -232,6 +233,7 @@
             <tr>
               <th class="p-2 text-left">Nome</th>
               <th class="p-2">Preço</th>
+              <th class="p-2">Quantidade</th>
               <th class="p-2">Ação</th>
             </tr>
           </thead>
@@ -240,7 +242,16 @@
             <tr v-for="product in selectedProducts" :key="product.id">
               <td>{{ product.name }}</td>
               <td class="text-center p-2">{{ product.price }}</td>
-              <td v-if="!viewSale" class="text-center p-2">Excluir</td>
+              <td class="text-center p-2">{{ product.quantity }}</td>
+              <td v-if="!viewSale" class="text-center p-2">
+                <button 
+                  type="button"
+                  @click="removeProduct(product.id)"
+                  class="text-red-600 hover:text-red-800"
+                >
+                  Excluir
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -314,7 +325,7 @@
   import { computed, onMounted, ref, watch } from 'vue';
   import { useSalesStore } from '/src/stores/SalesStore.js';
   import { useProductStore } from '/src/stores/ProductsStore.js';
-  import Modal from '../components/ModalVenda.vue';
+  import Modal from '../components/Modal.vue';
 
   const storeSales = useSalesStore();
   const productStore = useProductStore();
@@ -346,6 +357,27 @@
       return sale.payment_method.type === 'PIX' ? sum + Number(sale.total_price) : sum;
     }, 0) || 0;
     return totalPix.toFixed(2);
+  });
+
+  const accountCred = computed(() => {
+    const totalCred = storeSales.sales?.sales?.reduce((sum, sale) => {      
+      return sale.payment_method.type === 'Crédito' ? sum + Number(sale.total_price) : sum;
+    }, 0) || 0;
+    return totalCred.toFixed(2);
+  });
+
+  const accountDebit = computed(() => {
+    const totalDebit = storeSales.sales?.sales?.reduce((sum, sale) => {
+      return sale.payment_method.type === 'Débito' ? sum + Number(sale.total_price) : sum;
+    }, 0) || 0;
+    return totalDebit.toFixed(2);
+  });
+
+  const accountCash = computed(() => {
+    const totalCash = storeSales.sales?.sales?.reduce((sum, sale) => {
+      return sale.payment_method.type === 'Dinheiro' ? sum + Number(sale.total_price) : sum;
+    }, 0) || 0;
+    return totalCash.toFixed(2);
   });
 
   const formatDate = (dateString) => {
@@ -381,6 +413,7 @@
 
   const setProduct = () => {
     const productItem = products.value.find(p => p.id === product.value);
+    
     if(productItem) {
       selectedProducts.value.push(productItem);    
       saleForm.value.products = selectedProducts.value;      
@@ -391,7 +424,7 @@
   };
 
   const save = () => {
-    if (saleForm.id) {
+    if (saleForm.value.id) {
       storeSales.salesUpdateAction(saleForm.value);
       toggleModal();
     } else {
@@ -411,6 +444,14 @@
     selectedProducts.value = [];
      viewSale.value = false;
   }
+
+  const removeProduct = (productId) => {
+    selectedProducts.value = selectedProducts.value.filter(product => product.id !== productId);
+    saleForm.value.products = selectedProducts.value;
+    saleForm.value.quantity = selectedProducts.value.length;
+    totalPrice.value = selectedProducts.value.reduce((acc, item) => acc + parseFloat(item.price), 0);
+    saleForm.value.totalPrice = totalPrice.value;
+  };
 
   onMounted( async () => {
     storeSales.salesListAction();
