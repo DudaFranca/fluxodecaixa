@@ -48,7 +48,7 @@ export const useSalesStore = defineStore('sales', () => {
 
   const salesUpdateAction = async (payload) => {
     try {
-      const response = await api.post(`/sales/edit/${payload.id}`, payload);
+      const response = await api.put(`/sales/edit/${payload.id}`, payload);
       sales.value = response.data;
       toast.success('Venda editada com sucesso!', {
         position: 'top-center',

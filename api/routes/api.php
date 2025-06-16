@@ -27,4 +27,5 @@ Route::get('sales', [SalesController::class, 'index']);
 Route::get('sales/{id}', [SalesController::class, 'sale']);
 Route::post('sales/create', [SalesController::class, 'store']);
 Route::put('sales/edit/{id}', [SalesController::class, 'edit']);
+
 Route::get('products', [ProductController::class, 'index']);
