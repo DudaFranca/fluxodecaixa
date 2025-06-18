@@ -234,7 +234,7 @@
               <th class="p-2 text-left">Nome</th>
               <th class="p-2">Preço</th>
               <th class="p-2">Quantidade</th>
-              <th class="p-2">Ação</th>
+              <th  v-if="!viewSale" class="p-2">Ação</th>
             </tr>
           </thead>
           
@@ -413,21 +413,30 @@
 
   const setProduct = () => {
     const productItem = products.value.find(p => p.id === product.value);
+    const existingProduct = selectedProducts.value.find(p => p.id === productItem.id);
+
+    if (existingProduct) {
+      existingProduct.quantity += 1;      
+    } else {
+      selectedProducts.value.push({
+        ...productItem,
+        quantity: 1
+      });      
+    }
     
     if(productItem) {
-      selectedProducts.value.push(productItem);    
       saleForm.value.products = selectedProducts.value;      
-      saleForm.value.quantity = selectedProducts.value.length;
-      totalPrice.value = selectedProducts.value.reduce((acc, item) => acc + parseFloat(item.price), 0);
+      saleForm.value.quantity = selectedProducts.value.reduce((acc, p) => acc + p.quantity, 0);
+      totalPrice.value = selectedProducts.value.reduce((acc, item) => acc + item.quantity * parseFloat(item.price), 0);
       saleForm.value.totalPrice = totalPrice.value;
-    }
+    }    
   };
 
   const save = () => {
     if (saleForm.value.id) {
       storeSales.salesUpdateAction(saleForm.value);
       toggleModal();
-    } else {
+    } else {  
       storeSales.salesSaveAction(saleForm.value);
       clearForm();
     }
