@@ -12,6 +12,7 @@
         </button>
       </div>
 
+      <!-- Table value sale -->
       <div class="box-border grid grid-cols-5 gap-5">
         <div class="box-number">
           <h1 class="box-number-value">R$ {{ account }}</h1>
@@ -242,7 +243,8 @@
             <tr v-for="product in selectedProducts" :key="product.id">
               <td>{{ product.name }}</td>
               <td class="text-center p-2">{{ product.price }}</td>
-              <td class="text-center p-2">{{ product.quantity }}</td>
+              <td v-if="product.pivot" class="text-center p-2">{{ product.pivot.quantity }}</td>
+              <td v-else class="text-center p-2">{{ product.quantity }}</td>
               <td v-if="!viewSale" class="text-center p-2">
                 <button 
                   type="button"
